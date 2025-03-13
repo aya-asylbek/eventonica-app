@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors()); //Enables CORS, which allows your frontend to make requests to your backend 
-app.use(json()); //middleware automatically parses incoming JSON request bodies.
+app.use(express.json()); //middleware automatically parses incoming JSON request bodies.
 
 //route for the home page
 app.get('/', (req, res) => {
