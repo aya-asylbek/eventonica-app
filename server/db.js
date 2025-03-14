@@ -6,10 +6,10 @@ dotenv.config();
 const { Pool } = pkg;
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,  // This will 'eventonica' from Postgres
-    port: process.env.DB_PORT,
+    user:'tpl522_13',
+    host: '/tmp',
+    database: 'eventonica',  // This will 'eventonica' from Postgres
+    port: 5432
 });
 
 
