@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import pool from './db.js'; // Import the database connection pool (from db.js)
 
 config();//When you call config(), it reads the .env file and adds all the variables defined in it to the process.env object. 
+console.log("DB_USER:", process.env.DB_USER); // Should print your database user
 
 //import { EVENTS } from './events.js';//to get data locally from my sample file events.js and test in postman 
 
@@ -20,22 +21,18 @@ app.get('/', (req, res) => {
   res.send('Hello from Eventonica Server!');
 });
 
-// Route to get all events locally with no postgres from my sample file events.js
- //app.get('/events', (req, res) => {
- //res.json(EVENTS);  // Send imported data as JSON response
- //});
 
-//GET endpoint for all events from PostgreSQL database
+
+//To get data with Postgres
  app.get('/api/events', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM events'); // Query to get all events
-    res.json(result.rows); // Send the result rows as a JSON response
+    const result = await pool.query('SELECT * FROM events');
+    res.json(result.rows);
   } catch (err) {
-    console.error(err); // Log any errors to the console
-    res.status(500).send('Server Error'); // Send a 500 error if something goes wrong
+    console.error(err);
+    res.status(500).send('Server Error');
   }
 });
-
 
  //(get event by id -locally )
  //app.get('/event/:id', (req, res) => {
@@ -54,3 +51,10 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+
+// Route to get all events locally with no postgres from my sample file events.js
+ //app.get('/events', (req, res) => {
+ //res.json(EVENTS);  // Send imported data as JSON response
+ //});
