@@ -111,9 +111,7 @@ cd client
 
 npm test
 
-Example test output:
-
-Test Results 
+You will see test Results 
 
 Project Structure 📂
 
