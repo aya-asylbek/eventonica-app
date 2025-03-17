@@ -33,6 +33,23 @@ app.get('/', (req, res) => {
   }
 });
 
+//buy Id 
+app.get('/api/events/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT * FROM events WHERE id = $1', [id]);
+
+    if (result.rows.length > 0) {
+      res.json(result.rows[0]);
+    } else {
+      res.status(404).json({ message: 'Event not found' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 app.post('/api/events', async (req, res) => {
   const { name, date, category } = req.body;
@@ -49,6 +66,22 @@ app.post('/api/events', async (req, res) => {
 });
 
 
+
+// Edit an event (PUT)
+app.put('/api/events', async (req, res) => {
+  const { id } = req.params;
+  const { name, date, category } = req.body;
+  
+  try {
+    const { rows } = await pool.query(
+      'UPDATE events SET name = $1, date = $2, category = $3 WHERE id = $4 RETURNING *',
+      [name, date, category, id]
+    );
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
  
 
   
