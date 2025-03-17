@@ -1,5 +1,6 @@
-// src/App.jsx
 import { useState, useEffect } from 'react';
+import AddEvent from './components/AddEvent';
+
 
 function App() {
   const [events, setEvents] = useState([]);
@@ -21,6 +22,7 @@ function App() {
           </li>
         ))}
       </ul>
+      <AddEvent onAdd={(newEvent) => setEvents([...events, newEvent])} />
     </div>
   );
 }
