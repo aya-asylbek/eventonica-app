@@ -3,6 +3,10 @@
 A full-stack event management application built with React ⚛️, Express 🚂, and PostgreSQL 🐘.
 
 
+https://github.com/user-attachments/assets/8aec96d1-f5e1-4438-a379-361db885a86c
+
+
+
 
 ## Features ✨
 
