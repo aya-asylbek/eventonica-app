@@ -10,7 +10,8 @@ config();//When you call config(), it reads the .env file and adds all the varia
 
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
+
 
 app.use(cors()); //Enables CORS, which allows your frontend to make requests to your backend 
 app.use(express.json()); //middleware automatically parses incoming JSON request bodies.
@@ -33,22 +34,6 @@ app.get('/', (req, res) => {
   }
 });
 
-//buy Id 
-app.get('/api/events/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await pool.query('SELECT * FROM events WHERE id = $1', [id]);
-
-    if (result.rows.length > 0) {
-      res.json(result.rows[0]);
-    } else {
-      res.status(404).json({ message: 'Event not found' });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
 
 //post- add new one
 app.post('/api/events', async (req, res) => {
@@ -68,7 +53,7 @@ app.post('/api/events', async (req, res) => {
 
 
 // Edit an event (PUT)
-app.put('/api/events', async (req, res) => {
+app.put('/api/events/:id', async (req, res) => {
   const { id } = req.params;
   const { name, date, category } = req.body;
   
@@ -101,13 +86,59 @@ app.delete('/api/events/:id', async (req, res) => {
   }
 });
 
+// Search for events by name and/or category
+app.get('/api/events/search', async (req, res) => {
+  const { name, category } = req.query;
   
-//This starts the server and listens on the specified port,
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  // At least one search parameter is required,maybe name or category 
+  if (!name && !category) {
+    return res.status(400).json({ message: "Please provide 'name' or 'category' to search" });
+  }
+
+  try {
+    // Build dynamic query based on provided parameters
+    let query = 'SELECT * FROM events WHERE ';
+    const params = [];
+    const conditions = [];
+
+    if (name) {
+      conditions.push(`name ILIKE $${params.length + 1}`);
+      params.push(`%${name}%`);
+    }
+
+    if (category) {
+      conditions.push(`category ILIKE $${params.length + 1}`);
+      params.push(`%${category}%`);
+    }
+
+    query += conditions.join(' AND ');
+
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
+// Get event by ID ( use 'pool')
+app.get('/api/events/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM events WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // Route to get all events locally with no postgres from my sample file events.js
  //app.get('/events', (req, res) => {

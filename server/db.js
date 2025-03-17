@@ -13,16 +13,16 @@ const pool = new Pool({
 });
 
 
-console.log('DB_USER:', process.env.DB_USER);//check user 
-console.log('Connected to PostgreSQL! ✅');//check if connected to postgress sucessfully
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_DATABASE:", process.env.DB_DATABASE);
-console.log("DB_PORT:", process.env.DB_PORT);
+// console.log('DB_USER:', process.env.DB_USER);//check user 
+// console.log('Connected to PostgreSQL! ✅');//check if connected to postgress sucessfully
+// console.log("DB_HOST:", process.env.DB_HOST);
+// console.log("DB_DATABASE:", process.env.DB_DATABASE);
+// console.log("DB_PORT:", process.env.DB_PORT);
 
 // Test connection immediately after creating pool
-pool.query('SELECT NOW()')
-  .then(() => console.log('Database connection successful ✅'))
-  .catch(err => console.error('Database connection failed ❌', err));
+// pool.query('SELECT NOW()')
+//   .then(() => console.log('Database connection successful ✅'))
+//   .catch(err => console.error('Database connection failed ❌', err));
 
 export default pool;
 
