@@ -1,4 +1,3 @@
-// src/components/AddEvent.jsx
 import { useState } from 'react';
 
 export default function AddEvent({ onAdd }) {
