@@ -42,7 +42,7 @@ function App() {
       <AddEvent />
       
       <table className="event-table">
-        {/* Table structure remains the same */}
+        {}
         <tbody>
           {state.events.map(event => (
             <tr key={event.id}>

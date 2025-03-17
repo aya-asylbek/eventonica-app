@@ -26,7 +26,7 @@ export default function AddEvent() {
     }
   };
 
-  // Update form data state correctly
+  // Update form data state
   const handleChange = (e) => {
     setFormData({
       ...formData,
