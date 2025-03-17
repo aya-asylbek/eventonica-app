@@ -4,7 +4,6 @@ import { config } from 'dotenv';
 import pool from './db.js'; // Import the database connection pool (from db.js)
 
 config();//When you call config(), it reads the .env file and adds all the variables defined in it to the process.env object. 
-console.log("DB_USER:", process.env.DB_USER); // Should print your database user
 
 //import { EVENTS } from './events.js';//to get data locally from my sample file events.js and test in postman 
 
@@ -34,17 +33,23 @@ app.get('/', (req, res) => {
   }
 });
 
- //(get event by id -locally )
- //app.get('/event/:id', (req, res) => {
-    //const eventId = parseInt(req.params.id, 10); // Convert the event ID to a number
-    //const event = EVENTS.find(e => e.id === eventId); // Find the event by ID
-  
-    //if (!event) {
-      //return res.status(404).json({ message: "Event not found" }); // If no event is found, return a 404 error
-    //}
-  
-    //res.json(event); // If the event is found, return it as JSON
-  //});
+
+app.post('/api/events', async (req, res) => {
+  const { name, date, category } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO events (name, date, category) VALUES ($1, $2, $3) RETURNING *',
+      [name, date, category]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+ 
 
   
 //This starts the server and listens on the specified port,
@@ -58,3 +63,16 @@ app.listen(PORT, () => {
  //app.get('/events', (req, res) => {
  //res.json(EVENTS);  // Send imported data as JSON response
  //});
+
+
+ //(get event by id -locally )
+ //app.get('/event/:id', (req, res) => {
+    //const eventId = parseInt(req.params.id, 10); // Convert the event ID to a number
+    //const event = EVENTS.find(e => e.id === eventId); // Find the event by ID
+  
+    //if (!event) {
+      //return res.status(404).json({ message: "Event not found" }); // If no event is found, return a 404 error
+    //}
+  
+    //res.json(event); // If the event is found, return it as JSON
+  //});
